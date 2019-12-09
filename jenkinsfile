@@ -10,7 +10,7 @@ stages {
    }
    }
 
-   stage ('Test')
+   stage ('Test') {
    agent { docker 'Openjdk:8.jar' }
    steps {
    echo "Hello Java-JDK"
