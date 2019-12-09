@@ -1,33 +1,21 @@
 pipeline {
-
 agent any
-	
-	stages {
-	stage ('Checkout code') {
 
-	steps {
-	withMaven(maven: 'Maven_3_6') {
-	sh 'mvn clean compile'
-	}
-	}
-	}
-			
-			stage ('Testing code') {
+stages {
+   stage ('Build') {
+   agent { docker 'Maven' }
+   steps {
+   echo "Hello Maven"
+   sh 'mvn --version'
+   }
+   }
 
-			steps {
-			withMaven(maven: 'Maven_3_6') {
-			sh 'mvn test'
-			}
-			}
-			}
-				
-				stage ('Checkout code') {
-					
-					steps {
-					withMaven(maven: 'Maven_3_6') {
-					sh 'mvn deploy'
-					}
-					}
-					}
-						
-						}
+   stage ('Test')
+   agent { docker 'Openjdk:8.jar' }
+   steps {
+   echo "Hello Java-JDK"
+   sh 'java -version'
+   }
+   }
+ }
+ }
