@@ -1,1 +1,75 @@
-Checking Poll SCM trigger
+Step 1 -> Ssh to your instance
+Refer Step 4 of this blog to ssh to your instance.
+
+Step 2 -> Check the Java version
+java -version
+before_java
+
+As can be seen in the image above, java 7 is installed on the EC2 instance by default. We will now be updating to java 8.
+
+Step 3 -> Download RPM package of Oracle JDK (8u121)
+ wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u141-b15/336fa29ff2bb4ef291e347e091f7f4a7/jdk-8u141-linux-x64.rpm
+ 
+download_java
+NOTE -> It is important to manually instruct wget to send the cookie and here this is done using
+
+–header “Cookie: oraclelicense=accept-securebackup-cookie”
+
+where oraclelicense is the name of the cookie and accept-securebackup-cookie is its value.
+
+Step 4 -> Install JDK 8
+sudo yum install -y jdk-8u141-linux-x64.rpm
+Step 5 -> Verify oracle JDK version
+java -version
+java_after
+The java version is now updated. You may now delete jdk-8u121-linux-x64.rpm file.
+
+
+
+3. JAVA_HOME Environment Variables
+This is good practice to set the JAVA_HOME environment variable.
+
+3.1 Edit the .bash_profile, and append the export JAVA_HOME at the end of the file, for example :
+
+.bash_profile
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
+
+# User specific environment and startup programs
+
+export JAVA_HOME=/usr/java/jdk1.8.0_102/
+export JRE_HOME=/usr/java/jdk1.8.0_102/jre
+
+PATH=$PATH:$HOME/bin:$JAVA_HOME/bin
+
+export PATH
+Copy
+3.2 Test the $JAVA_HOME and $PATH
+
+$ source .bash_profile 
+
+$ echo $JRE_HOME
+/usr/java/jdk1.8.0_102/jre
+
+$ echo $JAVA_HOME
+/usr/java/jdk1.8.0_102/
+
+$ echo $PATH
+/...:/usr/local/bin:/usr/X11R6/bin:/home/mkyong/bin:/usr/java/jdk1.8.0_102//bin
+Copy
+4. Multiple JDK installed
+If the CentOS has multiple JDK installed, you can use the alternatives command to set the default java
+
+$ sudo alternatives --config java
+[sudo] password for mkyong: 
+
+There are 2 programs which provide 'java'.
+
+  Selection    Command
+-----------------------------------------------
+   1           /usr/lib/jvm/jre-1.6.0-openjdk.x86_64/bin/java
+*+ 2           /usr/java/jdk1.8.0_102/jre/bin/java
+
+Enter to keep the current selection[+], or type selection number:
